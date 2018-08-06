@@ -103,8 +103,8 @@ public class TomatoUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(!WORK) {
 					WORK = true;
+					sound.close();
 					if (WR) {//启动番茄的倒计时
-						sound.close();
 						tomato = new timeCount(25, "小番茄结束");
 						button.setText("休息");
 						WR = false;
@@ -114,7 +114,6 @@ public class TomatoUI extends JFrame {
 						circle++;
 					}
 					else {//启动休息的倒计时
-						sound.close();
 						button.setText("番茄");
 						WR = true;
 						timu.setText("休息时间");
