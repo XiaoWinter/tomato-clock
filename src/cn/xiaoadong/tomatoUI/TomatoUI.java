@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import cn.xiaoadong.sound.TomatoSound;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ import javax.swing.SwingConstants;
 
 public class TomatoUI extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Boolean WR= true;
 	private Timer timer;
@@ -34,6 +36,7 @@ public class TomatoUI extends JFrame {
 	private String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 	private int circle;//一个大循环，4番茄+3休息+1大休息
 	private volatile static Boolean WORK = false;
+	private TomatoSound sound;
 	//2ge线程任务
 	timeCount tomato;
 	timeCount rest;
@@ -45,6 +48,7 @@ public class TomatoUI extends JFrame {
 		//
 		timer = new Timer();
 		//
+		sound = new TomatoSound();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -100,6 +104,7 @@ public class TomatoUI extends JFrame {
 				if(!WORK) {
 					WORK = true;
 					if (WR) {//启动番茄的倒计时
+						sound.close();
 						tomato = new timeCount(25, "小番茄结束");
 						button.setText("休息");
 						WR = false;
@@ -109,6 +114,7 @@ public class TomatoUI extends JFrame {
 						circle++;
 					}
 					else {//启动休息的倒计时
+						sound.close();
 						button.setText("番茄");
 						WR = true;
 						timu.setText("休息时间");
@@ -160,6 +166,7 @@ public class TomatoUI extends JFrame {
 			bigRest.resetStop();
 			bigRest.cancel();
 		}
+		sound.close();
 		WORK = false;
 		WR = true;
 		circle = 0;
@@ -170,6 +177,7 @@ public class TomatoUI extends JFrame {
 		
 	}
 	public void pause() {
+		sound.close();
 		if (circle%2 == 1) {
 			tomato.stop();
 		}else if (circle == 7) {
@@ -211,6 +219,7 @@ public class TomatoUI extends JFrame {
 			if (fanqie <= 0) {
 				timeLabel.setText(prompt);
 				WORK = false;
+				sound.launch();
 				this.cancel();
 			}
 			fanqie--;
