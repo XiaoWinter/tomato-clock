@@ -20,7 +20,13 @@ import java.util.TimerTask;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
+/**
+ * 使用锁实现暂停功能，问题是
+ * 可能会出问题说不清除，有良好的代码可读性
+ * 符合面向对象的设计方法
+ * @author Administrator
+ *
+ */
 public class TomatoUI2 extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -126,7 +132,7 @@ public class TomatoUI2 extends JFrame {
 							circle = 0;
 						}else {
 							//小休息
-							rest = new timeCount(5, "小休息结束");
+							rest = new timeCount(7, "小休息结束");
 							timer.schedule(rest, new Date(), 1000);
 							circle++;
 						}

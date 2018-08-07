@@ -20,7 +20,13 @@ import java.util.TimerTask;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
+/**
+ * 使用while在run 方法里空转实现
+ * 暂停功能，消耗资源，但是稳定，
+ * 绝对不会出问题
+ * @author Administrator
+ *
+ */
 public class TomatoUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -183,9 +189,9 @@ public class TomatoUI extends JFrame {
 		sound.close();
 		if (circle%2 == 1) {
 			tomato.stop();
-		}else if (circle == 7) {
+		}else if (circle == 0 && bigRest != null) {
 			bigRest.stop();
-		}else {
+		}else if (rest != null) {
 			rest.stop();
 		}
 	}
