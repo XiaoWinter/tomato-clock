@@ -41,10 +41,10 @@ public class TomatoSound {
 			//整首信息
 			Track tarck = sq.createTrack();
 			
-			for(int i = 1; i < 80; i++) {
-				tarck.add(makeEvent(144, 1, i*2, 100, i*2));
+			for(int i = 1; i < 4; i++) {
+				tarck.add(makeEvent(144, 1, 60, 100, i));
 //				tarck.add(makeEvent(176, 1, 127, 0, i));
-				tarck.add(makeEvent(128, 1, i*2, 100, i*2 + 2));
+				tarck.add(makeEvent(128, 1, 60, 100, i + 2));
 			}
 			squ.setSequence(sq);//CD放到DVD上
 		} catch (MidiUnavailableException e) {
@@ -55,7 +55,7 @@ public class TomatoSound {
 			//循环
 			squ.setLoopCount(squ.LOOP_CONTINUOUSLY);
 			//设置速度，以每分钟的拍数为单位。实际的回放速度是指定值和速度因子的乘积。
-			squ.setTempoInBPM(150);
+			squ.setTempoInBPM(50);
 			squ.start();
 	}
 	public Sequencer getSequencer() {
@@ -69,4 +69,7 @@ public class TomatoSound {
 			squ.close();
 		}
 	}
+	/*public static void main(String[] args) {
+		new TomatoSound().launch();
+	}*/
 }
