@@ -120,7 +120,7 @@ public class TomatoUI extends JFrame {
 						if (circle == 7) {
 							//大休息
 							bigRest = new timeCount(15, "大休息结束");
-							timer.schedule(rest, new Date(), 1000);
+							timer.schedule(bigRest, new Date(), 1000);
 							circle = 0;
 						}else {
 							//小休息
