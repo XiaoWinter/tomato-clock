@@ -140,6 +140,10 @@ public class TomatoUI extends JFrame {
 		label.setBounds(312, 10, 112, 30);
 		contentPane.add(label);
 		
+		JLabel lblV = new JLabel("V1.0");
+		lblV.setBounds(10, 10, 54, 15);
+		contentPane.add(lblV);
+		
 		timer.schedule(new TimerTask() {
 			
 			SimpleDateFormat dateFormatter = new SimpleDateFormat(DEFAULT_TIME_FORMAT);

@@ -42,6 +42,7 @@ public class TomatoUI2 extends JFrame {
 	timeCount tomato;
 	timeCount rest;
 	timeCount bigRest;
+	private JLabel lblV;
 	/**
 	 * Create the frame.
 	 */
@@ -140,6 +141,10 @@ public class TomatoUI2 extends JFrame {
 		JLabel label = new JLabel();
 		label.setBounds(312, 10, 112, 30);
 		contentPane.add(label);
+		
+		lblV = new JLabel("V1.1");
+		lblV.setBounds(10, 10, 54, 15);
+		contentPane.add(lblV);
 		
 		timer.schedule(new TimerTask() {
 			
