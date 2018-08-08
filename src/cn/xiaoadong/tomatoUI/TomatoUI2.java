@@ -235,7 +235,7 @@ public class TomatoUI2 extends JFrame {
 		private int fanqie;
 		public timeCount(int n, String prompt) {
 			this.prompt = prompt;
-			fanqie = n;
+			fanqie = n * 60;
 		}
 
 		@Override
