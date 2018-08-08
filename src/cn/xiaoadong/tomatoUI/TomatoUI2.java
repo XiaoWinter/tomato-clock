@@ -111,6 +111,7 @@ public class TomatoUI2 extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(!WORK) {
 					WORK = true;
+					STOP = false;//防止线程休眠
 					sound.close();
 					if (WR) {//启动番茄的倒计时
 						tomato = new timeCount(25, "小番茄结束");
@@ -234,7 +235,7 @@ public class TomatoUI2 extends JFrame {
 		private int fanqie;
 		public timeCount(int n, String prompt) {
 			this.prompt = prompt;
-			fanqie = n * 60;
+			fanqie = n;
 		}
 
 		@Override
