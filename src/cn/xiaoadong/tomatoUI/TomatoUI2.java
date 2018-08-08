@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import cn.xiaoadong.setTomato.SetTomato1;
 import cn.xiaoadong.sound.TomatoSound;
 
 import javax.swing.JButton;
@@ -20,6 +21,10 @@ import java.util.TimerTask;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 /**
  * 使用锁实现暂停功能，问题是
  * 可能会出问题说不清除，有良好的代码可读性
@@ -33,22 +38,35 @@ public class TomatoUI2 extends JFrame {
 	private JPanel contentPane;
 	private Boolean WR= true;
 	private Timer timer;
+	//当前时间
 	private String time;
+	//计时时间
 	private String countDown;
-	private JPanel timepanel;
+	//显示时间
 	private JLabel timeLabel;
+	//显示状态
 	private JLabel timu;
+	//开始按钮
 	private JButton button;
+	//日期格式
 	private String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm";
 	private int circle;//一个大循环，4番茄+3休息+1大休息
+	//工作状态
 	private volatile static Boolean WORK = false;
 	private volatile static Boolean STOP = false;
 	private TomatoSound sound;
 	//2ge线程任务
-	timeCount tomato;
-	timeCount rest;
-	timeCount bigRest;
-	private JLabel lblV;
+	private timeCount tomato;
+	private timeCount rest;
+	private timeCount bigRest;
+	//番茄时间，休息时间
+	private int tomatoTime;
+	private int restTime;
+	private int bigRestTime;
+	//自身的引用
+	private TomatoUI2 tUi2;
+	//显示日期
+	private JLabel label;
 	/**
 	 * Create the frame.
 	 */
@@ -57,15 +75,64 @@ public class TomatoUI2 extends JFrame {
 		timer = new Timer();
 		//
 		sound = new TomatoSound();
+		//
+		tomatoTime = 25;
+		restTime = 7;
+		bigRestTime = 15;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(500, 200, 450, 300);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu menu_1 = new JMenu("报表");
+		menuBar.add(menu_1);
+		
+		JMenuItem menuItem_3 = new JMenuItem("今日历程");
+		menu_1.add(menuItem_3);
+		
+		JMenuItem menuItem_4 = new JMenuItem("本周总结");
+		menu_1.add(menuItem_4);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("本月总结");
+		menu_1.add(mntmNewMenuItem);
+		
+		JMenu menu = new JMenu("设置");
+		menuBar.add(menu);
+		
+		JMenuItem menuItem = new JMenuItem("时间设置");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//重置番茄钟
+				reset();
+				//弹出窗体
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SetTomato1 frame = new SetTomato1(tUi2);
+							frame.setVisible(true);
+							frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		menu.add(menuItem);
+		
+		JMenuItem menuItem_1 = new JMenuItem("提醒音设置");
+		menu.add(menuItem_1);
+		
+		JMenuItem menuItem_2 = new JMenuItem("自定义设置");
+		menu.add(menuItem_2);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		timepanel = new JPanel();
+		JPanel timepanel = new JPanel();
 		timepanel.setBounds(10, 47, 414, 106);
 		timepanel.setVisible(true);
 		contentPane.add(timepanel);
@@ -114,7 +181,7 @@ public class TomatoUI2 extends JFrame {
 					STOP = false;//防止线程休眠
 					sound.close();
 					if (WR) {//启动番茄的倒计时
-						tomato = new timeCount(25, "小番茄结束");
+						tomato = new timeCount(tomatoTime, "小番茄结束");
 						button.setText("休息");
 						WR = false;
 						//番茄
@@ -128,12 +195,12 @@ public class TomatoUI2 extends JFrame {
 						timu.setText("休息时间");
 						if (circle == 7) {
 							//大休息
-							bigRest = new timeCount(15, "大休息结束");
+							bigRest = new timeCount(bigRestTime, "大休息结束");
 							timer.schedule(bigRest, new Date(), 1000);
 							circle = 0;
 						}else {
 							//小休息
-							rest = new timeCount(7, "小休息结束");
+							rest = new timeCount(restTime, "小休息结束");
 							timer.schedule(rest, new Date(), 1000);
 							circle++;
 						}
@@ -145,12 +212,12 @@ public class TomatoUI2 extends JFrame {
 		contentPane.add(button);
 		
 		//显示当前时间
-		JLabel label = new JLabel();
+		label = new JLabel();
 		label.setBounds(312, 10, 112, 30);
 		contentPane.add(label);
 		
-		lblV = new JLabel("V1.1");
-		lblV.setBounds(10, 10, 54, 15);
+		JLabel lblV = new JLabel("V1.1");
+		lblV.setBounds(370, 225, 54, 15);
 		contentPane.add(lblV);
 		
 		timer.schedule(new TimerTask() {
@@ -164,6 +231,7 @@ public class TomatoUI2 extends JFrame {
 				
 			},
 		 new Date(), 1000);
+		tUi2 = this;
 }
 	public void reset() {
 		huifu();
@@ -216,18 +284,24 @@ public class TomatoUI2 extends JFrame {
 			}
 		}
 	}
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TomatoUI2 frame = new TomatoUI2();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		
+	//番茄钟时间的设置
+	public int getTomatoTime() {
+		return tomatoTime;
+	}
+	public void setTomatoTime(int tomatoTime) {
+		this.tomatoTime = tomatoTime;
+	}
+	public int getRestTime() {
+		return restTime;
+	}
+	public void setRestTime(int restTime) {
+		this.restTime = restTime;
+	}
+	public int getBigRestTime() {
+		return bigRestTime;
+	}
+	public void setBigRestTime(int bigRestTime) {
+		this.bigRestTime = bigRestTime;
 	}
 //设计一个任务内部类
 	class timeCount extends TimerTask{
@@ -244,13 +318,16 @@ public class TomatoUI2 extends JFrame {
 			int second = fanqie % 60;
 			countDown = minute + " : " + second;
 			timeLabel.setText(countDown);
+			
 			if (fanqie <= 0) {
 				timeLabel.setText(prompt);
 				WORK = false;
 				sound.launch();
 				this.cancel();
 			}
+			
 			fanqie--;
+			
 			if (STOP) {
 				synchronized (this) {
 					try {
@@ -260,7 +337,21 @@ public class TomatoUI2 extends JFrame {
 					}
 				}
 			}
+			
 		}
 		
+	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					TomatoUI2 frame = new TomatoUI2();
+					frame.setVisible(true);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
