@@ -8,7 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import cn.xiaoadong.setTomato.SetTomato1;
+import cn.xiaoadong.setTomato.SoundSet1;
+import cn.xiaoadong.setTomato.TimeSet1;
 import cn.xiaoadong.sound.TomatoSound;
 
 import javax.swing.JButton;
@@ -36,6 +37,7 @@ public class TomatoUI2 extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	//番茄休息状态判断
 	private Boolean WR= true;
 	private Timer timer;
 	//当前时间
@@ -54,7 +56,12 @@ public class TomatoUI2 extends JFrame {
 	//工作状态
 	private volatile static Boolean WORK = false;
 	private volatile static Boolean STOP = false;
+	//声音
 	private TomatoSound sound;
+	//节奏
+	private Integer tone;
+	//频率
+	private Integer hz;
 	//2ge线程任务
 	private timeCount tomato;
 	private timeCount rest;
@@ -67,6 +74,7 @@ public class TomatoUI2 extends JFrame {
 	private TomatoUI2 tUi2;
 	//显示日期
 	private JLabel label;
+	
 	/**
 	 * Create the frame.
 	 */
@@ -87,15 +95,19 @@ public class TomatoUI2 extends JFrame {
 		setJMenuBar(menuBar);
 		
 		JMenu menu_1 = new JMenu("报表");
+		menu_1.setBackground(Color.LIGHT_GRAY);
 		menuBar.add(menu_1);
 		
 		JMenuItem menuItem_3 = new JMenuItem("今日历程");
+		menuItem_3.setBackground(Color.GRAY);
 		menu_1.add(menuItem_3);
 		
 		JMenuItem menuItem_4 = new JMenuItem("本周总结");
+		menuItem_4.setBackground(Color.GRAY);
 		menu_1.add(menuItem_4);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("本月总结");
+		mntmNewMenuItem.setBackground(Color.GRAY);
 		menu_1.add(mntmNewMenuItem);
 		
 		JMenu menu = new JMenu("设置");
@@ -110,7 +122,7 @@ public class TomatoUI2 extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							SetTomato1 frame = new SetTomato1(tUi2);
+							TimeSet1 frame = new TimeSet1(tUi2);
 							frame.setVisible(true);
 							frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						} catch (Exception e) {
@@ -123,9 +135,27 @@ public class TomatoUI2 extends JFrame {
 		menu.add(menuItem);
 		
 		JMenuItem menuItem_1 = new JMenuItem("提醒音设置");
+		menuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//弹出窗体
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							SoundSet1 frame = new SoundSet1(tUi2);
+							frame.setVisible(true);
+							frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		});
+		menuItem_1.setBackground(Color.WHITE);
 		menu.add(menuItem_1);
 		
 		JMenuItem menuItem_2 = new JMenuItem("自定义设置");
+		menuItem_2.setBackground(Color.GRAY);
 		menu.add(menuItem_2);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -216,8 +246,9 @@ public class TomatoUI2 extends JFrame {
 		label.setBounds(312, 10, 112, 30);
 		contentPane.add(label);
 		
-		JLabel lblV = new JLabel("V1.1");
-		lblV.setBounds(370, 225, 54, 15);
+		JLabel lblV = new JLabel("V1.2$ 小阿冬");
+		lblV.setFont(new Font("仿宋", Font.PLAIN, 10));
+		lblV.setBounds(344, 215, 80, 15);
 		contentPane.add(lblV);
 		
 		timer.schedule(new TimerTask() {
@@ -284,6 +315,19 @@ public class TomatoUI2 extends JFrame {
 			}
 		}
 	}
+	
+	public Integer getTone() {
+		return tone;
+	}
+	public void setTone(Integer tone) {
+		this.tone = tone;
+	}
+	public Integer getHz() {
+		return hz;
+	}
+	public void setHz(Integer hz) {
+		this.hz = hz;
+	}
 	//番茄钟时间的设置
 	public int getTomatoTime() {
 		return tomatoTime;
@@ -303,6 +347,8 @@ public class TomatoUI2 extends JFrame {
 	public void setBigRestTime(int bigRestTime) {
 		this.bigRestTime = bigRestTime;
 	}
+	//声音的相关设置
+	
 //设计一个任务内部类
 	class timeCount extends TimerTask{
 		private String prompt;
@@ -322,7 +368,7 @@ public class TomatoUI2 extends JFrame {
 			if (fanqie <= 0) {
 				timeLabel.setText(prompt);
 				WORK = false;
-				sound.launch();
+				sound.launch(tone,hz);
 				this.cancel();
 			}
 			

@@ -228,7 +228,7 @@ public class TomatoUI extends JFrame {
 			if (fanqie <= 0) {
 				timeLabel.setText(prompt);
 				WORK = false;
-				sound.launch();
+				sound.launch(null,null);
 				this.cancel();
 			}
 			fanqie--;

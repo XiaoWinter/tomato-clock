@@ -17,14 +17,14 @@ import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 
-public class SetTomato1 extends JFrame {
+public class TimeSet1 extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	@SuppressWarnings("unused")
 	private TomatoUI2 tomatoUI2;
 	
-	public SetTomato1(TomatoUI2 tomatoUI2) {
+	public TimeSet1(TomatoUI2 tomatoUI2) {
 		//传入要修改的番茄钟
 		this.tomatoUI2 = tomatoUI2;
 		
@@ -57,7 +57,7 @@ public class SetTomato1 extends JFrame {
 		
 		JLabel label_3 = new JLabel("设置");
 		label_3.setHorizontalAlignment(SwingConstants.CENTER);
-		label_3.setBounds(136, 10, 147, 29);
+		label_3.setBounds(10, 10, 414, 29);
 		label_3.setFont(new Font("yahei", 2, 25));
 		label_3.setForeground(Color.red);
 		contentPane.add(label_3);
@@ -86,7 +86,7 @@ public class SetTomato1 extends JFrame {
 					tomatoUI2.setBigRestTime(Integer.parseInt(textField_2.getText()));
 				}
 				
-				label_3.setText("设置成功");
+				label_3.setText("设置成功，非数字项保持初始设置");
 			}
 		});
 		button.setBounds(170, 209, 100, 29);

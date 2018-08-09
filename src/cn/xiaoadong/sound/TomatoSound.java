@@ -29,9 +29,13 @@ public class TomatoSound {
 		return event;
 	}
 
-
-	@SuppressWarnings("static-access")
+	//默认值
 	private void sound(){
+		sound(60,50 );
+	}
+	
+	@SuppressWarnings("static-access")
+	public void sound(int tone, int hz) {
 		//1.获得音序器并打开(发声的装置)
 		try {
 			squ = MidiSystem.getSequencer();
@@ -42,9 +46,11 @@ public class TomatoSound {
 			Track tarck = sq.createTrack();
 			
 			for(int i = 1; i < 4; i++) {
-				tarck.add(makeEvent(144, 1, 60, 100, i));
+				//频道，音调，音量
+				tarck.add(makeEvent(144, 1, tone, 100, i));
+				//短促
 //				tarck.add(makeEvent(176, 1, 127, 0, i));
-				tarck.add(makeEvent(128, 1, 60, 100, i + 2));
+				tarck.add(makeEvent(128, 1, tone, 100, i + 2));
 			}
 			squ.setSequence(sq);//CD放到DVD上
 		} catch (MidiUnavailableException e) {
@@ -55,21 +61,21 @@ public class TomatoSound {
 			//循环
 			squ.setLoopCount(squ.LOOP_CONTINUOUSLY);
 			//设置速度，以每分钟的拍数为单位。实际的回放速度是指定值和速度因子的乘积。
-			squ.setTempoInBPM(50);
+			squ.setTempoInBPM(hz);
 			squ.start();
 	}
-	public Sequencer getSequencer() {
-		return squ;
-	}
-	public void launch() {
-		sound();
+	public void launch(Integer tone, Integer hz) {
+		if (tone == null || hz == null) {
+			sound();
+		}
+		sound(tone, hz);
 	}
 	public void close() {
 		if (squ != null) {
 			squ.close();
 		}
 	}
-	/*public static void main(String[] args) {
-		new TomatoSound().launch();
-	}*/
+	public static void main(String[] args) {
+		new TomatoSound().launch(null,null);
+	}
 }
