@@ -37,7 +37,7 @@ public class TomatoSound {
 
 	//默认值
 	private void sound(){
-		sound(60,50 );
+		sound(60,50);
 	}
 	
 	@SuppressWarnings("static-access")
@@ -74,15 +74,16 @@ public class TomatoSound {
 	public void launch(Integer tone, Integer hz) {
 		if (tone == null || hz == null) {
 			sound();
+		}else {
+			sound(tone, hz);
 		}
-		sound(tone, hz);
 	}
 	public void close() {
 		if (squ != null) {
 			squ.close();
 		}
 	}
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new TomatoSound().launch(null,null);
-	}
+	}*/
 }
