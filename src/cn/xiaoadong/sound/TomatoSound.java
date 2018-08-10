@@ -10,12 +10,18 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 /**
  * 发声的装置-->CD-->整首歌-->一个个音符
+ * 这个类不是线程安全的
  * @author Administrator
  *
  */
 public class TomatoSound {
 	private Sequencer squ;
 	public TomatoSound() {
+		try {
+			squ = MidiSystem.getSequencer();
+		} catch (MidiUnavailableException e) {
+			e.printStackTrace();
+		}
 	}
 	//一个个音符
 	public static MidiEvent makeEvent(int com, int cha, int one, int two, int tick) {
@@ -38,7 +44,8 @@ public class TomatoSound {
 	public void sound(int tone, int hz) {
 		//1.获得音序器并打开(发声的装置)
 		try {
-			squ = MidiSystem.getSequencer();
+			//不是线程安全的，每次调用squ都变了，我们只能关掉最后的squ，所以要在方法外初始化
+			//squ = MidiSystem.getSequencer();
 			squ.open();//打开音响
 			//构造具有指定的定时 division 类型和定时精度的新 MIDI Sequence（CD）
 			Sequence sq = new Sequence(Sequence.PPQ, 4);

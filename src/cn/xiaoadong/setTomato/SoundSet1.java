@@ -13,9 +13,11 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.util.concurrent.TimeUnit;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.awt.event.ActionEvent;
 
 public class SoundSet1 extends JFrame {
@@ -24,6 +26,7 @@ public class SoundSet1 extends JFrame {
 	private JPanel contentPane;
 	@SuppressWarnings("unused")
 	private TomatoUI2 tomatoUI2;
+	private JLabel label;
 
 
 	/**
@@ -40,6 +43,7 @@ public class SoundSet1 extends JFrame {
 		contentPane.setLayout(null);
 		
 		JSlider slider = new JSlider();
+		slider.setValue(60);
 		slider.setSnapToTicks(true);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
@@ -56,11 +60,11 @@ public class SoundSet1 extends JFrame {
 		slider_1.setPaintLabels(true);
 		slider_1.setMinorTickSpacing(5);
 		slider_1.setMajorTickSpacing(20);
-		slider.setValue(tomatoUI2.getHz() == null ? 50 : tomatoUI2.getHz());
+		slider_1.setValue(tomatoUI2.getHz() == null ? 50 : tomatoUI2.getHz());
 		slider_1.setBounds(104, 126, 304, 52);
 		contentPane.add(slider_1);
 		
-		JLabel label = new JLabel("声音设置");
+		label = new JLabel("声音设置");
 		label.setForeground(Color.RED);
 		label.setFont(new Font("仿宋", Font.BOLD, 25));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -84,6 +88,7 @@ public class SoundSet1 extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				tomatoUI2.setTone(slider.getValue());
 				tomatoUI2.setHz(slider_1.getValue());
+				label.setText("设置成功");
 			}
 		});
 		button.setFont(new Font("仿宋", Font.BOLD, 16));
@@ -92,15 +97,16 @@ public class SoundSet1 extends JFrame {
 		
 		JButton button_1 = new JButton("测试");
 		button_1.addActionListener(new ActionListener() {
+			Timer timer = new Timer();
 			public void actionPerformed(ActionEvent e) {
 				TomatoSound sound = new TomatoSound();
 				sound.launch(slider.getValue(), slider_1.getValue());
-				try {
-					TimeUnit.SECONDS.sleep(3);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-				sound.close();
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						sound.close();
+					}
+				}, 3000);
 			}
 		});
 		button_1.setBounds(114, 201, 93, 37);

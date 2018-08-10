@@ -151,7 +151,6 @@ public class TomatoUI2 extends JFrame {
 				});
 			}
 		});
-		menuItem_1.setBackground(Color.WHITE);
 		menu.add(menuItem_1);
 		
 		JMenuItem menuItem_2 = new JMenuItem("自定义设置");
