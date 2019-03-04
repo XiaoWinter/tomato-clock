@@ -8,12 +8,19 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+
 import cn.xiaoadong.setTomato.SoundSet1;
 import cn.xiaoadong.setTomato.TimeSet1;
 import cn.xiaoadong.sound.TomatoSound;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +43,7 @@ import javax.swing.JMenuItem;
 public class TomatoUI2 extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	
 	private JPanel contentPane;
 	//番茄休息状态判断
 	private Boolean WR= true;
@@ -66,27 +74,42 @@ public class TomatoUI2 extends JFrame {
 	private timeCount tomato;
 	private timeCount rest;
 	private timeCount bigRest;
+	private URL resource;//配置文件路径
+
+	//从文件得到的以下时间参数
+	private String[] timeset=null;
 	//番茄时间，休息时间
-	private int tomatoTime;
-	private int restTime;
-	private int bigRestTime;
-	//自身的引用
-	private TomatoUI2 tUi2;
+	private int tomatoTime;//timeset[0]
+	private int restTime;//timeset[1]
+	private int bigRestTime;//timeset[2]
+	//自身的引用--逸出风险
+	//private TomatoUI2 tUi2;
 	//显示日期
 	private JLabel label;
 	
 	/**
 	 * Create the frame.
+	 * @throws IOException 
 	 */
-	public TomatoUI2() {
+	public TomatoUI2() throws IOException {
+		resource = this.getClass().getResource("timeset.txt");
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(new File(resource.getFile())));
+			timeset = reader.readLine().split("-");
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} finally {
+			reader.close();
+		}
 		//
 		timer = new Timer();
 		//
 		sound = new TomatoSound();
-		//
-		tomatoTime = 25;
-		restTime = 7;
-		bigRestTime = 15;
+		//初始化时间
+		tomatoTime = Integer.parseInt(timeset[0]);
+		restTime = Integer.parseInt(timeset[1]);
+		bigRestTime = Integer.parseInt(timeset[2]);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(500, 200, 450, 300);
@@ -122,7 +145,7 @@ public class TomatoUI2 extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							TimeSet1 frame = new TimeSet1(tUi2);
+							TimeSet1 frame = new TimeSet1(getself());
 							frame.setVisible(true);
 							frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						} catch (Exception e) {
@@ -141,7 +164,7 @@ public class TomatoUI2 extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							SoundSet1 frame = new SoundSet1(tUi2);
+							SoundSet1 frame = new SoundSet1(getself());
 							frame.setVisible(true);
 							frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						} catch (Exception e) {
@@ -261,8 +284,12 @@ public class TomatoUI2 extends JFrame {
 				
 			},
 		 new Date(), 1000);
-		tUi2 = this;
+		//逸出风险
+//		tUi2 = this;
 }
+	public TomatoUI2 getself() {
+		return this;
+	}
 	public void reset() {
 		huifu();
 		//处理线程,要先唤醒，否则会出bug，
@@ -345,6 +372,12 @@ public class TomatoUI2 extends JFrame {
 	}
 	public void setBigRestTime(int bigRestTime) {
 		this.bigRestTime = bigRestTime;
+	}
+	public String[] getTimeset() {
+		return timeset;
+	}
+	public URL getResource() {
+		return resource;
 	}
 	//声音的相关设置
 	

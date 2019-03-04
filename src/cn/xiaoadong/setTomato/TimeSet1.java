@@ -13,6 +13,10 @@ import javax.swing.JLabel;
 import java.awt.TextField;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.net.URL;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
@@ -27,7 +31,8 @@ public class TimeSet1 extends JFrame {
 	public TimeSet1(TomatoUI2 tomatoUI2) {
 		//传入要修改的番茄钟
 		this.tomatoUI2 = tomatoUI2;
-		
+		String[] timeset = tomatoUI2.getTimeset();
+		URL resource = tomatoUI2.getResource();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(150, 150, 450, 300);
 		contentPane = new JPanel();
@@ -77,16 +82,28 @@ public class TimeSet1 extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (isUnsignedInteger(textField.getText())) {
+					timeset[0] = textField.getText();
 					tomatoUI2.setTomatoTime(Integer.parseInt(textField.getText()));
 				}
 				if (isUnsignedInteger(textField_1.getText())) {
+					timeset[1] = textField_1.getText();
 					tomatoUI2.setRestTime(Integer.parseInt(textField_1.getText()));				
 				}
 				if (isUnsignedInteger(textField_2.getText())) {
+					timeset[2] = textField_2.getText();
 					tomatoUI2.setBigRestTime(Integer.parseInt(textField_2.getText()));
 				}
-				
-				label_3.setText("设置成功，非数字项保持初始设置");
+				BufferedWriter writer = null;
+				try {
+					writer = new BufferedWriter(new FileWriter(new File(resource.getFile())));
+					String timesetstr = timeset[0]+"-"
+							+timeset[1]+"-"
+							+timeset[2];
+					writer.write(timesetstr);
+					writer.close();
+					label_3.setText("设置成功");
+				} catch (Exception e2) {
+				}
 			}
 		});
 		button.setBounds(170, 209, 100, 29);
